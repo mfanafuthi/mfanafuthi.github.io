@@ -13,15 +13,18 @@
         
 </head>
 <script>
-var client = new XMLHttpRequest();
-client.open('GET', 'book/chapter1.md');
-	//var showdown = new Showdown.converter();
+$(document).ready(function() {
+var showdown = new Showdown.converter();
 	
-client.onreadystatechange = function() {
-    //var preview_content = showdown.makeHtml(client.responseText);
-    $(".zweiDrittel").html(client.responseText);
-}
-client.send();
+$.ajax({
+            url : "book/chapter1.md",
+            dataType: "text",
+            success : function (data) {
+                var preview_content = showdown.makeHtml(data);
+                $(".zweiDrittel").html(preview_content);
+            }
+        });
+});
 </script>
 <body>
     <div class="container">
