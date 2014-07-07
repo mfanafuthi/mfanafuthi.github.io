@@ -15,11 +15,11 @@
 <script>
 var client = new XMLHttpRequest();
 client.open('GET', 'book');
-	var showdown = new Showdown.converter();
+	//var showdown = new Showdown.converter();
 	
 client.onreadystatechange = function() {
     //var preview_content = showdown.makeHtml(client.responseText);
-    alert(client.responseText);
+    $(".zweiDrittel").html(client.responseText);
 }
 client.send();
 </script>
