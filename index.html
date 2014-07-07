@@ -1,7 +1,50 @@
 <!DOCTYPE html>
+ 
 <html>
+ 
+<head>
+	<title>Book Test</title>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Kurzbeschreibung" />
+ 
+	<link href="css/style.css" type="text/css" rel="stylesheet" />
+        <script src="js/showdown.js"></script>
+        <script src="js/jquery-1.11.1.min.js"></script>
+        
+</head>
+<script>
+var showdown = new Showdown.converter();
+$(document).ready(function() {
+
+
+var dir = "book/";
+var fileextension=".md";
+      $.ajax({
+         //This will retrieve the contents of the folder if the folder is configured as 'browsable'
+            url: dir,
+            success: function (data) {
+                //Lsit all png file names in the page
+                $(data).find("a:contains(" + fileextension + ")").each(function () {
+                    //var filename = this.href.replace(window.location.host, "").replace("http:///","");
+                    $(".einDrittel").html("1");
+                    //$("body").append($("<img src=" + Dir + filename + "></img>"));
+                });
+            }
+        });
+
+
+
+});
+</script>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="einDrittel">
+            </div>
+            <div class="zweiDrittel">
+            </div>
+        </div>
+    </div>
+ 
 </body>
 </html>
