@@ -19,40 +19,43 @@ $(document).ready(function() {
     var username = "mfanafuthi";
     var repname = "mfanafuthi.github.io";
     var branch = "master"
+    var tableOfContent="Table of Content"
     
     var url = "https://api.github.com/repos/"+username+"/"+repname+"/contents/book?ref="+branch;
     var showdown = new Showdown.converter();
+    
+    $(".toc").append("<H1>"+tableOfContent+"</h1>");
 
     $.getJSON(url,function(result){
+        var urlSave= "book/"+result[0]["name"];
+        $.ajax({
+            url : urlSave,
+            dataType: "text",
+            success : function (data) {
+                var preview_content = showdown.makeHtml(data);
+                $(".title").append(preview_content);
+            }
+        });
+        
         $.each(result, function (key, data) {
             var string = data["name"];
             var n = string.length;
             var Extrakt = string.slice(0, n-3);
-            $(".einDrittel").append("<a class='link'>"+Extrakt+"</a>");
-        })
-        var url= "book/"+result[0]["name"];
-        $.ajax({
-            url : url,
-            dataType: "text",
-            success : function (data) {
-                var preview_content = showdown.makeHtml(data);
-                $(".zweiDrittel").html(preview_content);
+            $(".toc").append("<a class='link'>"+Extrakt+"</a>");
+            var url= "book/"+string;
+            if(url!=urlSave){
+                $.ajax({
+                    url : url,
+                    dataType: "text",
+                    success : function (data) {
+                        var preview_content = showdown.makeHtml(data);
+                        $(".content").append(preview_content);
+                    }
+                });
             }
-        });
-        
+        })
     });
     
-    $(document).on("click", ".link", function(){
-        var url="book/"+$(".link").text()+".md"
-        $.ajax({
-            url : url,
-            dataType: "text",
-            success : function (data) {
-                var preview_content = showdown.makeHtml(data);
-                $(".zweiDrittel").html(preview_content);
-            }
-        });
-    });
 
     
 });
@@ -60,9 +63,10 @@ $(document).ready(function() {
 <body>
     <div class="container">
         <div class="row clearfix">
-            <div class="einDrittel">
-            </div>
-            <div class="zweiDrittel">
+            <div class="full">
+                <div class="title"></div>
+                <div class="toc"></div>
+                <div class="content"></div>
             </div>
         </div>
     </div>

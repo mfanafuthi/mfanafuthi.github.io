@@ -5,5 +5,42 @@
 .clearfix:after {clear: both;}
 .clearfix {*zoom: 1;}
 
-.zweiDrittel{width:66%; float:left; padding:20px;background-color:#45ef30}
-.einDrittel{width:33%; float:left; padding:20px;background-color:#00aa30}
+body{
+    font-family: 'lato';
+    font-weight: 300;
+    font-size: 15px;
+    line-height:20px;
+}
+
+h1,h2,h3,h4{
+    font-weight:400;
+    line-height:40px;
+    padding-bottom:5px;
+    padding-top:10px;
+}
+
+h1{font-size:40px;}
+h2{font-size:30px;}
+h3{font-size:20px;}
+h4{font-size:15px;}
+h5{font-size:15px;}
+h6{font-size:15px;}
+
+p{padding-bottom:5px;}
+ul{padding-left:20px; padding-bottom:5px;}
+
+@media (min-width: 800px) {
+    .zweiDrittel{width:66%; float:left; padding:20px;}
+    .einDrittel{width:33%; float:left; padding:20px;}
+    .full{width:100%; float:left; padding:20px;}
+}
+
+@media (max-width: 799px) {
+    .zweiDrittel{width:100%; float:left; padding:20px;}
+    .einDrittel{width:100%; float:left; padding:20px;}
+    .full{width:100%; float:left; padding:20px;}
+}
+
+
+.link{cursor:pointer;}
+.link:hover{text-decoration:underline}
