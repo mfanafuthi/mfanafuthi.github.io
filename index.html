@@ -28,7 +28,7 @@ $(document).ready(function() {
             var string = data["name"];
             var n = string.length;
             var Extrakt = string.slice(0, n-3);
-            $(".einDrittel").append("<a class='link'>"+Extrakt+"</a>");
+            $(".einDrittel").append("<p><a class='link'>"+Extrakt+"</a></p>");
         })
         var url= "book/"+result[0]["name"];
         $.ajax({
@@ -43,7 +43,7 @@ $(document).ready(function() {
     });
     
     $(document).on("click", ".link", function(){
-        var url="book/"+$(".link").text()+".md"
+        var url="book/"+$(this).text()+".md"
         $.ajax({
             url : url,
             dataType: "text",
