@@ -1,19 +1,3 @@
-<!DOCTYPE html>
- 
-<html>
- 
-<head>
-	<title>Book Test</title>
-	<meta charset="UTF-8" />
-	<meta name="description" content="Kurzbeschreibung" />
- 
-	<link href="css/style.css" type="text/css" rel="stylesheet" />
-        <script src="js/showdown.js"></script>
-        <script src="js/jquery-1.11.1.min.js"></script>
-        <script src="js/Github.js"></script>
-        
-</head>
-<script>
 $(document).ready(function() {
     var username = "mfanafuthi";
     var repname = "mfanafuthi.github.io";
@@ -55,16 +39,3 @@ $(document).ready(function() {
 
     
 });
-</script>
-<body>
-    <div class="container">
-        <div class="row clearfix">
-            <div class="einDrittel">
-            </div>
-            <div class="zweiDrittel">
-            </div>
-        </div>
-    </div>
- 
-</body>
-</html>
