@@ -5,32 +5,36 @@
 .clearfix:after {clear: both;}
 .clearfix {*zoom: 1;}
 
+html{}
+
 body{
     font-family: 'Helvetica';
     font-weight: 300;
     font-size: 16px;
-    line-height:24px;
+    line-height: 24px;
 }
 
-h1,h2,h3{
+h1,h2,h3,h4,h5,h6{
     font-weight:500;
-    line-height:48px;
-    padding-bottom:4px;
-    padding-top:8px;
+    padding-top:24px; padding-bottom:8px;
 }
 
-h1{font-size:40px; padding-top: 16px; padding-bottom: 8px;}
-h2{font-size:32px; padding-top: 16px; padding-bottom: 8px;}
-h3{font-size:24px; padding-top: 16px; padding-bottom: 8px;}
-h4{font-size:16px; padding-top: 16px; padding-bottom: 8px;font-weight:500;}
-h5{font-size:16px; padding-top: 16px; padding-bottom: 8px;font-weight:500;}
-h6{font-size:16px; padding-top: 16px; padding-bottom: 8px;font-weight:500;}
+h1{font-size:32px; line-height:32px;}
+h2{font-size:28px; line-height:32px;}
+h3{font-size:24px;line-height:24px;}
+h4{font-size:20px;line-height:24px;}
+h5{font-size:16px;line-height:24px;}
+h6{font-size:16px;line-height:24px;}
 
-p{padding-bottom:8px;}
-ul{padding-left:40px; padding-bottom:8px;}
-ol{padding-left:40px; padding-bottom:8px;}
-blockquote{font-style: italic; padding-left:20px; border-left:solid 2px #eee; padding-top:8px;}
+/*p, ul, ol, blockqoute img*/
+p{padding-bottom: 8px;}
+ul{padding-bottom: 8px; padding-left: 24px;}
+ol{padding-bottom: 8px; padding-left: 24px;}
+blockquote{padding-top: 8px; padding-left: 24px; font-style:italic; border-left: 3px solid #aaa;}
+img{}
 
+pre {border: 1px solid #aaa; padding:24px;}
+pre code{}
 @media (min-width: 800px) {
     .zweiDrittel{width:66%; float:left; padding:20px;}
     .einDrittel{width:33%; float:left; padding:20px;}
