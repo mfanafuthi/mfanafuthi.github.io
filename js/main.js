@@ -13,7 +13,7 @@ $(document).ready(function() {
         dataType: "text",
         success : function (data) {
             var preview_content = showdown.makeHtml(data);
-            $(".einDrittel").append("<p><a class='link'>"+cover+"</a></p>");
+            $(".toc").append("<p><a class='link' data-link="+titleUrl+">"+cover+"</a></p>");
             $(".zweiDrittel").html(preview_content);
         },
         error : function () {
@@ -38,16 +38,24 @@ $(document).ready(function() {
             var n = string.length;
             var Extrakt = string.slice(0, n-3);
             if(Extrakt!=cover){
-                $(".einDrittel").append("<p><a class='link'>"+Extrakt+"</a></p>");
+                var url="book/"+Extrakt+".md"
+                $.ajax({
+                    url : url,
+                    dataType: "text",
+                    success : function (data) {
+                        var preview_content = showdown.makeHtml(data);
+                        title = $(preview_content).first().filter('h1').text();
+                        $(".toc").append("<p><a class='link' data-link="+url+">"+title+"</a></p>");
+                    }
+                });
             }
         })
-        $(".einDrittel").append('<p><button type="button" id="download">Donwload PDF</button></p>')
     });
     
     
     
     $(document).on("click", ".link", function(){
-        var url="book/"+$(this).text()+".md"
+        var url=$(this).data( "link" );
         $.ajax({
             url : url,
             dataType: "text",
@@ -57,6 +65,15 @@ $(document).ready(function() {
             }
         });
     });
+    
+    $(document).on("click", "#download", function(){
+var doc = new jsPDF();
+doc.text(20, 20, 'Hello world!');
+doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
+doc.addPage();
+doc.text(20, 20, 'Do you like that?');
 
+doc.save('Test.pdf');
+    });
     
 });
