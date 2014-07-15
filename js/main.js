@@ -160,6 +160,9 @@ $(document).ready(function() {
             },
             'CODE': function(element, renderer){
                 return true;
+            },
+            'IMG': function(element, renderer){
+                return true;
             }
         };
       
@@ -179,10 +182,6 @@ $(document).ready(function() {
 
         for(z=1; z<theContent.length; z++){
             string=theContent[z];
-            console.log(theContent.length);
-            console.log(z);
-
-            console.log(theContent[z]);
             doc.addPage();
             y=30;
             doc.fromHTML(string,30,30,{
@@ -192,7 +191,7 @@ $(document).ready(function() {
         }
 
         //doc.output('datauri');
-        doc.save(repname+".pdf");
+        //doc.save(repname+".pdf");
         
     });
     
