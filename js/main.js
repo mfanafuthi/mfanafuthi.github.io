@@ -180,7 +180,7 @@ $(document).ready(function() {
         for(i=1; i<theContent.length; i++){
             string=theContent[i];
             //alert(theContent[i]);
-            //console.log(theContent);
+            console.log(theContent[i]);
             doc.addPage();
             y=30;
             doc.fromHTML(string,30,30,{
