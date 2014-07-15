@@ -1,10 +1,13 @@
 $(document).ready(function() {
+    
+    /*Diese Daten mŸssen angepasst werden*/
     var username = "mfanafuthi";
     var repname = "mfanafuthi.github.io";
     var branch = "master"
     var cover = "Title"
     var tableOfContent="Table of Content"
     
+    /*feste Variablen*/
     var titleUrl = "book/"+cover+".md"
     var url = "https://api.github.com/repos/"+username+"/"+repname+"/contents/book?ref="+branch;
     var showdown = new Showdown.converter();
@@ -13,7 +16,9 @@ $(document).ready(function() {
     var y=30;
     var x=30
     var doc = new jsPDF("p","mm","a4");
+    arrayBilder=[];
     
+    /*lade Title Seite. title.Md*/
     $.ajax({
         url : titleUrl,
         dataType: "text",
@@ -43,7 +48,8 @@ $(document).ready(function() {
         }
         
     });
-
+    
+    /*lade alle Daten*/
     $.getJSON(url,function(result){
         $.each(result, function (key, data) {
             var string = data["name"];
@@ -67,109 +73,79 @@ $(document).ready(function() {
         })
     });
     
-    
+    /*Click durch die einzelnen Kapitel*/
     $(document).on("click", ".link", function(){
         var dom=$(this).data( "link" );
         $(".content").fadeOut(100);
         $("."+dom).delay(300).fadeIn()
     });
     
+    /*Pdf erstellen*/
     $(document).on("click", "#download", function(){
-        y=30
-        var specialElementHandlers = {
-            'H1': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(24)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(24, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'H2': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(18)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(18, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'H3': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(14)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(14, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'H4': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(12)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(12, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'H5': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(12)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(12, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'H6': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(12)
-                doc.setFontStyle('bold')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                y=y+16*0.3527;
-                page(12, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'P': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(12)
-                doc.setFontStyle('normal')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                page(12, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'LI': function(element, renderer){
-                doc.setFont("helvetica");
-                doc.setFontSize(12)
-                doc.setFontStyle('normal')
-                neuertext=doc.splitTextToSize($(element).text(), 160)
-                page(12, neuertext);
-                y=y+4*0.3527;
-                return true;
-            },
-            'BLOCKQOUTE': function(element, renderer){
-                return true;
-            },
-            'CODE': function(element, renderer){
-                return true;
-            },
-            'IMG': function(element, renderer){
-                return true;
+        /*Schritt 1 ALle Bilder zu URLs*/
+        zaehlerBilder=0;
+        
+        
+        $("img").each(function() {
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var imageObj = new Image();
+        
+            imageObj.onload = function() {
+                canvas.height=imageObj.height
+                canvas.width=imageObj.width
+                context.drawImage(imageObj, 0, 0);
+                data = canvas.toDataURL("image/jpeg");
+                sizeY=imageObj.height/imageObj.width*155;
+                //console.log(data);
+                callback(data, sizeY);
+            };
+            
+            var callback = function (data, sizeY) {
+                arrayBilder.push(data, sizeY)
+                zaehlerBilder=zaehlerBilder+1;
+                
+                canvas.remove();
+                
+                if(zaehlerBilder==$("img").length){
+                    makePDF();
+                }
+                
             }
-        };
-      
-        doc.fromHTML(theContent[0],30,30,{
-            'width': 170,
-            'elementHandlers': specialElementHandlers
+            
+            imageObj.src = $(this).attr("src");;
+             
         });
+    });
+    
+    /*PDF zusammenschreiben*/
+    function makePDF(){
+        y=30
+        zaehlerBilder2=0;
+        
+        if ($(theContent[0]).find("img").length > 0){
+            imgless = theContent[0].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
+            imgless=imgless.split("<div class=imgplaceholder></div>");
+            imgs=$(theContent[0]).find("img")
+            
+            for (v=0; v<imgless.length; v++){
+                doc.fromHTML(imgless[v],30,30,{
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+                });
+                
+                a=zaehlerBilder2*2;
+                b=a+1;
+                doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
+                y=y+arrayBilder[b]+16*0.3527;
+                zaehlerBilder=zaehlerBilder+1;
+            }
+        }else{
+            doc.fromHTML(theContent[0],30,30,{
+                'width': 170,
+                'elementHandlers': specialElementHandlers
+            });
+        }
         doc.addPage();
         y=30;
         htmlString="<h1>"+tableOfContent+"</h1>"+$(".toc").html();
@@ -177,23 +153,127 @@ $(document).ready(function() {
             'width': 170,
             'elementHandlers': specialElementHandlers
         });
-        
-        
-
+        doc.addPage();
         for(z=1; z<theContent.length; z++){
-            string=theContent[z];
-            doc.addPage();
-            y=30;
-            doc.fromHTML(string,30,30,{
-                'width': 170
-                ,'elementHandlers': specialElementHandlers
-            });
+        //    if ($(theContent[z]).find("img").length > 0){
+        //        imgless = theContent[z].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
+        //        imgless=imgless.split("<div class=imgplaceholder></div>");
+        //        imgs=$(theContent[z]).find("img")
+        //        
+        //        for (f=0; f<imgless.length; f++){
+        //            doc.fromHTML(imgless[f],30,30,{
+        //                'width': 170,
+        //                'elementHandlers': specialElementHandlers
+        //            });
+        //            
+        //            a=zaehlerBilder2*2;
+        //            b=a+1;
+        //            console.log(arrayBilder[a]);
+        //            console.log(arrayBilder[b]);
+        //            doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
+        //            y=y+arrayBilder[b]+16*0.3527;
+        //            zaehlerBilder=zaehlerBilder+1;
+        //        }
+        //    }else{
+                console.log(theContent[z]);
+                doc.addPage();
+                doc.fromHTML(theContent[z],30,30,{
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+               });
+        //    }
         }
-
-        //doc.output('datauri');
-        //doc.save(repname+".pdf");
         
-    });
+        //doc.save(repname+".pdf");
+        doc.output('datauri');
+    }
+    
+    var specialElementHandlers = {
+        'H1': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(24)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(24, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'H2': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(18)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(18, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'H3': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(14)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(14, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'H4': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(12)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(12, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'H5': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(12)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(12, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'H6': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(12)
+            doc.setFontStyle('bold')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            y=y+16*0.3527;
+            page(12, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'P': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(12)
+            doc.setFontStyle('normal')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            page(12, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'LI': function(element, renderer){
+            doc.setFont("helvetica");
+            doc.setFontSize(12)
+            doc.setFontStyle('normal')
+            neuertext=doc.splitTextToSize($(element).text(), 155)
+            page(12, neuertext);
+            y=y+4*0.3527;
+            return true;
+        },
+        'BLOCKQOUTE': function(element, renderer){
+            return true;
+        },
+        'CODE': function(element, renderer){
+            return true;
+        }
+    };
     
     function page(fontsize, textArray){
         fontsize=fontsize*1.2;
