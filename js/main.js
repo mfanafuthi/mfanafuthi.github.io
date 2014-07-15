@@ -134,11 +134,13 @@ $(document).ready(function() {
                     'elementHandlers': specialElementHandlers
                 });
                 
-                a=zaehlerBilder2*2;
-                b=a+1;
-                doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
-                y=y+arrayBilder[b]+16*0.3527;
-                zaehlerBilder=zaehlerBilder+1;
+                if(v+1!=imgless.length){
+                    a=zaehlerBilder2*2;
+                    b=a+1;
+                    doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
+                    y=y+arrayBilder[b]+16*0.3527;
+                    zaehlerBilder=zaehlerBilder+1;
+                }
             }
         }else{
             doc.fromHTML(theContent[0],30,30,{
@@ -153,35 +155,36 @@ $(document).ready(function() {
             'width': 170,
             'elementHandlers': specialElementHandlers
         });
-        doc.addPage();
+        
         for(z=1; z<theContent.length; z++){
-        //    if ($(theContent[z]).find("img").length > 0){
-        //        imgless = theContent[z].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
-        //        imgless=imgless.split("<div class=imgplaceholder></div>");
-        //        imgs=$(theContent[z]).find("img")
-        //        
-        //        for (f=0; f<imgless.length; f++){
-        //            doc.fromHTML(imgless[f],30,30,{
-        //                'width': 170,
-        //                'elementHandlers': specialElementHandlers
-        //            });
-        //            
-        //            a=zaehlerBilder2*2;
-        //            b=a+1;
-        //            console.log(arrayBilder[a]);
-        //            console.log(arrayBilder[b]);
-        //            doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
-        //            y=y+arrayBilder[b]+16*0.3527;
-        //            zaehlerBilder=zaehlerBilder+1;
-        //        }
-        //    }else{
-                console.log(theContent[z]);
-                doc.addPage();
+        doc.addPage();
+        y=30;
+            if ($(theContent[z]).find("img").length > 0){
+                imgless = theContent[z].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
+                imgless=imgless.split("<div class=imgplaceholder></div>");
+                imgs=$(theContent[z]).find("img")
+                
+                for (f=0; f<imgless.length; f++){
+                    doc.fromHTML(imgless[f],30,30,{
+                        'width': 170,
+                        'elementHandlers': specialElementHandlers
+                    });
+                    
+                    if(v+1!=imgless.length){
+                        a=zaehlerBilder2*2;
+                        b=a+1;
+                        doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
+                        y=y+arrayBilder[b]+16*0.3527;
+                        zaehlerBilder=zaehlerBilder+1;
+                    }
+                }
+            }else{
+                console.log(z);
                 doc.fromHTML(theContent[z],30,30,{
                     'width': 170,
                     'elementHandlers': specialElementHandlers
                });
-        //    }
+            }
         }
         
         //doc.save(repname+".pdf");
@@ -259,12 +262,20 @@ $(document).ready(function() {
             return true;
         },
         'LI': function(element, renderer){
+            
+            //doc.ellipse(x+4, y-1.5, 1, 1, 'D');
+            x=x+10;
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('normal')
             neuertext=doc.splitTextToSize($(element).text(), 155)
             page(12, neuertext);
             y=y+4*0.3527;
+            x=x-10;
+            return true;
+        },
+        'OL': function(element, renderer){
+            
             return true;
         },
         'BLOCKQOUTE': function(element, renderer){
