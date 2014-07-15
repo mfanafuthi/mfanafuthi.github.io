@@ -177,10 +177,12 @@ $(document).ready(function() {
         
         
 
-        for(i=1; i<theContent.length; i++){
-            string=theContent[i];
-            //alert(theContent[i]);
-            console.log(theContent[i]);
+        for(z=1; z<theContent.length; z++){
+            string=theContent[z];
+            console.log(theContent.length);
+            console.log(z);
+
+            console.log(theContent[z]);
             doc.addPage();
             y=30;
             doc.fromHTML(string,30,30,{
@@ -189,7 +191,8 @@ $(document).ready(function() {
             });
         }
 
-        doc.output('datauri');
+        //doc.output('datauri');
+        doc.save(repname+".pdf");
         
     });
     
