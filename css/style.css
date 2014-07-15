@@ -50,5 +50,5 @@ pre code{}
 
 .link{cursor:pointer;}
 .link:hover{text-decoration:underline}
-
+.content{display:none;}
 #download{margin-top:10px;}
