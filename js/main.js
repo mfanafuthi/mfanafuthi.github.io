@@ -164,29 +164,29 @@ $(document).ready(function() {
             'elementHandlers': specialElementHandlers
         });
         
-        for(q=3; q<theContent.length; q++){
+        for(q=1; q<theContent.length; q++){
             doc.addPage();
             y=startY;
-            //if ($(theContent[q]).find("img").length > 0){
-            //    imgless = theContent[q].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
-            //    imgless=imgless.split("<div class=imgplaceholder></div>");
-            //    imgs=$(theContent[q]).find("img")
-            //    
-            //    for (f=0; f<imgless.length; f++){
-            //        doc.fromHTML(imgless[f],startX,startY,{
-            //            'width': endX,
-            //            'elementHandlers': specialElementHandlers
-            //        });
-            //        
-            //        if(f+1!=imgless.length){
-            //            a=zaehlerBilder2*2;
-            //            b=a+1;
-            //            doc.addImage(arrayBilder[a], 'JPEG', startX, y, endX, arrayBilder[b]);
-            //            y=y+arrayBilder[b]+16*mmToPt;
-            //            zaehlerBilder=zaehlerBilder+1;
-            //        }
-            //    }
-            //}else{
+            if ($(theContent[q]).find("img").length > 0){
+                imgless = theContent[q].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
+                imgless=imgless.split("<div class=imgplaceholder></div>");
+                imgs=$(theContent[q]).find("img")
+                
+                for (f=0; f<imgless.length; f++){
+                    doc.fromHTML(imgless[f],startX,startY,{
+                        'width': endX,
+                        'elementHandlers': specialElementHandlers
+                    });
+                    
+                    if(f+1!=imgless.length){
+                        a=zaehlerBilder2*2;
+                        b=a+1;
+                        doc.addImage(arrayBilder[a], 'JPEG', startX, y, endX, arrayBilder[b]);
+                        y=y+arrayBilder[b]+16*mmToPt;
+                        zaehlerBilder=zaehlerBilder+1;
+                    }
+                }
+            }else{
                 //console.log(theContent);
                 //console.log(q);
                 //console.log(theContent[q]);
@@ -292,7 +292,7 @@ $(document).ready(function() {
         },
         'OL': function(element, renderer){
             ol=true
-            listnumber=0;
+            listnumber=1;
             return false;
         },
         'UL': function(element, renderer){
