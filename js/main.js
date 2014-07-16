@@ -278,14 +278,9 @@ $(document).ready(function() {
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('normal')
-            if(ol==false){
-                doc.ellipse(startX-6, y-1.5, 1, 1, 'D');
-            }else{
-                doc.text(startX-6.5, y,listnumber+".");
-                listnumber=listnumber+1;
-            }
+            
             neuertext=doc.splitTextToSize($(element).text(), endX)
-            page(12, neuertext);
+            pageLi(12, neuertext);
             y=y+4*mmToPt;
             startX=startX-10;
             return true;
@@ -300,10 +295,25 @@ $(document).ready(function() {
             return false;
         },
         
-        'BLOCKQOUTE': function(element, renderer){
+        'BLOCKQUOTE': function(element, renderer){
+            //doc.text(startX-6.5, y,"blockquote");
+            startX=startX+20;
+            doc.setFont("helvetica");
+            doc.setFontSize(10)
+            doc.setFontStyle('italic')
+            neuertext=doc.splitTextToSize($(element).text(), endX-20)
+            page(10, neuertext);
+            y=y+4*mmToPt;
+            startX=startX-20;
             return true;
         },
         'CODE': function(element, renderer){
+            doc.setFont("courier");
+            doc.setFontSize(10)
+            doc.setFontStyle('normal')
+            neuertext=doc.splitTextToSize($(element).text(), endX-20)
+            pageCode(10, neuertext);
+            
             return true;
         }
     };
@@ -328,6 +338,69 @@ $(document).ready(function() {
                 y=y+fontsize*mmToPt;
             }
         }else{
+            
+            doc.text(startX, y, textArray)
+            y=fullSize;
+        }
+    }
+    
+    function pageCode(fontsize, textArray){
+        fontsize=fontsize*1.2;
+        fullSize=y+fontsize*textArray.length*mmToPt+20;
+        textSize=fontsize*textArray.length*mmToPt;
+        if(fullSize>endY){
+            doc.rect(startX, y, endX, textSize+10, 'D');
+            doc.text(startX+10, y+10, textArray)
+            y=fullSize;
+        }else{
+            doc.rect(startX, y, endX, textSize+10, 'D');
+            doc.text(startX+10, y+10, textArray)
+            y=fullSize;
+        }
+    }
+    
+    function pageLi(fontsize, textArray){
+        fontsize=fontsize*1.2;
+        fullSize=y+fontsize*textArray.length*mmToPt;
+        textSize=fontsize*textArray.length*mmToPt;
+        if(fullSize>endY){
+            lines=fullSize-endY;
+            lines=textSize-lines;
+            lines=lines/fontsize*mmToPt;
+            lines=Math.floor(lines);
+            if(lines<0){
+                if(ol==false){
+                    doc.ellipse(startX-6, y-1.5, 1, 1, 'D');
+                }else{
+                    doc.text(startX-6.5, y,listnumber+".");
+                    listnumber=listnumber+1;
+                }
+            }
+            for(i=0; i<lines; i++){
+                doc.text(startX, y, textArray[i])
+                y=y+fontsize*mmToPt;
+            }
+            doc.addPage();
+            y=startY;
+            if(lines==0){
+                if(ol==false){
+                    doc.ellipse(startX-6, y-1.5, 1, 1, 'D');
+                }else{
+                    doc.text(startX-6.5, y,listnumber+".");
+                    listnumber=listnumber+1;
+                }
+            }
+            for(i=lines; i<textArray.length; i++){
+                doc.text(startX, y, textArray[i])
+                y=y+fontsize*mmToPt;
+            }
+        }else{
+            if(ol==false){
+                doc.ellipse(startX-6, y-1.5, 1, 1, 'D');
+            }else{
+                doc.text(startX-6.5, y,listnumber+".");
+                listnumber=listnumber+1;
+            }
             doc.text(startX, y, textArray)
             y=fullSize;
         }
