@@ -196,7 +196,7 @@ $(document).ready(function() {
                     'width': 170,
                     'elementHandlers': specialElementHandlers
                });
-            //}
+            }
         }
         
         //doc.save(repname+".pdf");
