@@ -7,16 +7,24 @@ $(document).ready(function() {
     var cover = "Title"
     var tableOfContent="Table of Content"
     
+    /*Seitenränder PDF in mm*/
+    var startY=25;
+    var endY=270;
+    var startX=25
+    var endX=150;
+    var mmToPt=0.3527;
     /*feste Variablen*/
     var titleUrl = "book/"+cover+".md"
     var url = "https://api.github.com/repos/"+username+"/"+repname+"/contents/book?ref="+branch;
     var showdown = new Showdown.converter();
     $(".tocTitle").append("<h5>"+tableOfContent+"</h5>");
     var theContent = [];
-    var y=30;
-    var x=30
     var doc = new jsPDF("p","mm","a4");
+    var ol=false;
+    var ul=false;
+    var listnumber;
     arrayBilder=[];
+    
     
     /*lade Title Seite. title.Md*/
     $.ajax({
@@ -96,7 +104,7 @@ $(document).ready(function() {
                 canvas.width=imageObj.width
                 context.drawImage(imageObj, 0, 0);
                 data = canvas.toDataURL("image/jpeg");
-                sizeY=imageObj.height/imageObj.width*155;
+                sizeY=imageObj.height/imageObj.width*endX;
                 //console.log(data);
                 callback(data, sizeY);
             };
@@ -120,7 +128,7 @@ $(document).ready(function() {
     
     /*PDF zusammenschreiben*/
     function makePDF(){
-        y=30
+        y=startY
         zaehlerBilder2=0;
         
         if ($(theContent[0]).find("img").length > 0){
@@ -129,62 +137,66 @@ $(document).ready(function() {
             imgs=$(theContent[0]).find("img")
             
             for (v=0; v<imgless.length; v++){
-                doc.fromHTML(imgless[v],30,30,{
-                    'width': 170,
+                doc.fromHTML(imgless[v],startX,startY,{
+                    'width': endX,
                     'elementHandlers': specialElementHandlers
                 });
                 
                 if(v+1!=imgless.length){
                     a=zaehlerBilder2*2;
                     b=a+1;
-                    doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
-                    y=y+arrayBilder[b]+16*0.3527;
+                    doc.addImage(arrayBilder[a], 'JPEG', startX, y, endX, arrayBilder[b]);
+                    y=y+arrayBilder[b]+16*mmToPt;
                     zaehlerBilder=zaehlerBilder+1;
                 }
             }
         }else{
-            doc.fromHTML(theContent[0],30,30,{
-                'width': 170,
+            doc.fromHTML(theContent[0],startX,startY,{
+                'width': endX,
                 'elementHandlers': specialElementHandlers
             });
         }
         doc.addPage();
-        y=30;
+        y=startY;
         htmlString="<h1>"+tableOfContent+"</h1>"+$(".toc").html();
-        doc.fromHTML(htmlString,30,30,{
-            'width': 170,
+        doc.fromHTML(htmlString,startX,startY,{
+            'width': endX,
             'elementHandlers': specialElementHandlers
         });
         
-        for(z=1; z<theContent.length; z++){
-        doc.addPage();
-        y=30;
-            if ($(theContent[z]).find("img").length > 0){
-                imgless = theContent[z].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
-                imgless=imgless.split("<div class=imgplaceholder></div>");
-                imgs=$(theContent[z]).find("img")
-                
-                for (f=0; f<imgless.length; f++){
-                    doc.fromHTML(imgless[f],30,30,{
-                        'width': 170,
-                        'elementHandlers': specialElementHandlers
-                    });
-                    
-                    if(v+1!=imgless.length){
-                        a=zaehlerBilder2*2;
-                        b=a+1;
-                        doc.addImage(arrayBilder[a], 'JPEG', x, y, 155, arrayBilder[b]);
-                        y=y+arrayBilder[b]+16*0.3527;
-                        zaehlerBilder=zaehlerBilder+1;
-                    }
-                }
-            }else{
-                console.log(z);
-                doc.fromHTML(theContent[z],30,30,{
+        for(q=3; q<theContent.length; q++){
+            doc.addPage();
+            y=startY;
+            //if ($(theContent[q]).find("img").length > 0){
+            //    imgless = theContent[q].replace(/<img[^>]*>/g,"<div class=imgplaceholder></div>");
+            //    imgless=imgless.split("<div class=imgplaceholder></div>");
+            //    imgs=$(theContent[q]).find("img")
+            //    
+            //    for (f=0; f<imgless.length; f++){
+            //        doc.fromHTML(imgless[f],startX,startY,{
+            //            'width': endX,
+            //            'elementHandlers': specialElementHandlers
+            //        });
+            //        
+            //        if(f+1!=imgless.length){
+            //            a=zaehlerBilder2*2;
+            //            b=a+1;
+            //            doc.addImage(arrayBilder[a], 'JPEG', startX, y, endX, arrayBilder[b]);
+            //            y=y+arrayBilder[b]+16*mmToPt;
+            //            zaehlerBilder=zaehlerBilder+1;
+            //        }
+            //    }
+            //}else{
+                //console.log(theContent);
+                //console.log(q);
+                //console.log(theContent[q]);
+                string=theContent[q].replace("/n","");
+                console.log(string);
+                doc.fromHTML(string,startX,startY,{
                     'width': 170,
                     'elementHandlers': specialElementHandlers
                });
-            }
+            //}
         }
         
         //doc.save(repname+".pdf");
@@ -196,88 +208,98 @@ $(document).ready(function() {
             doc.setFont("helvetica");
             doc.setFontSize(24)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(24, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'H2': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(18)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(18, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'H3': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(14)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(14, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'H4': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(12, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'H5': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(12, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'H6': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('bold')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
-            y=y+16*0.3527;
+            neuertext=doc.splitTextToSize($(element).text(), endX)
+            y=y+16*mmToPt;
             page(12, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'P': function(element, renderer){
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('normal')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
+            neuertext=doc.splitTextToSize($(element).text(), endX)
             page(12, neuertext);
-            y=y+4*0.3527;
+            y=y+4*mmToPt;
             return true;
         },
         'LI': function(element, renderer){
-            
-            //doc.ellipse(x+4, y-1.5, 1, 1, 'D');
-            x=x+10;
+            startX=startX+10;
             doc.setFont("helvetica");
             doc.setFontSize(12)
             doc.setFontStyle('normal')
-            neuertext=doc.splitTextToSize($(element).text(), 155)
+            if(ol==false){
+                doc.ellipse(startX-6, y-1.5, 1, 1, 'D');
+            }else{
+                doc.text(startX-6.5, y,listnumber+".");
+                listnumber=listnumber+1;
+            }
+            neuertext=doc.splitTextToSize($(element).text(), endX)
             page(12, neuertext);
-            y=y+4*0.3527;
-            x=x-10;
+            y=y+4*mmToPt;
+            startX=startX-10;
             return true;
         },
         'OL': function(element, renderer){
-            
-            return true;
+            ol=true
+            listnumber=0;
+            return false;
         },
+        'UL': function(element, renderer){
+            ol=false
+            return false;
+        },
+        
         'BLOCKQOUTE': function(element, renderer){
             return true;
         },
@@ -288,25 +310,25 @@ $(document).ready(function() {
     
     function page(fontsize, textArray){
         fontsize=fontsize*1.2;
-        fullSize=y+fontsize*textArray.length*0.3527;
-        textSize=fontsize*textArray.length*0.3527;
-        if(fullSize>280){
-            lines=fullSize-280;
+        fullSize=y+fontsize*textArray.length*mmToPt;
+        textSize=fontsize*textArray.length*mmToPt;
+        if(fullSize>endY){
+            lines=fullSize-endY;
             lines=textSize-lines;
-            lines=lines/fontsize*0.3527;
+            lines=lines/fontsize*mmToPt;
             lines=Math.floor(lines);
             for(i=0; i<lines; i++){
-                doc.text(x, y, textArray[i])
-                y=y+fontsize*0.3527;
+                doc.text(startX, y, textArray[i])
+                y=y+fontsize*mmToPt;
             }
             doc.addPage();
-            y=30;
+            y=startY;
             for(i=lines; i<textArray.length; i++){
-                doc.text(x, y, textArray[i])
-                y=y+fontsize*0.3527;
+                doc.text(startX, y, textArray[i])
+                y=y+fontsize*mmToPt;
             }
         }else{
-            doc.text(x, y, textArray)
+            doc.text(startX, y, textArray)
             y=fullSize;
         }
     }
