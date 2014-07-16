@@ -2,4 +2,4 @@
 
 Herausgeber: blabliublu
 
-![Titelbild](http://mfanafuthi.github.io/images/title.jpg)
+![Titelbild](images/title.jpg)
