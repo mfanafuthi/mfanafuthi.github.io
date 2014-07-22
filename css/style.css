@@ -40,12 +40,14 @@ pre code{width:100%; white-space: pre-wrap;}
     .zweiDrittel{width:66%; float:left; padding:20px;}
     .einDrittel{width:33%; float:left; padding:20px;}
     .full{width:100%; float:left; padding:20px;}
+
 }
 
 @media (max-width: 799px) {
     .zweiDrittel{width:100%; float:left; padding:20px;}
     .einDrittel{width:100%; float:left; padding:20px;}
     .full{width:100%; float:left; padding:20px;}
+    .tocTitle{display:none}
 }
 
 
@@ -53,3 +55,8 @@ pre code{width:100%; white-space: pre-wrap;}
 .link:hover{text-decoration:underline}
 .content{display:none;}
 #download{margin-top:10px;}
+
+/*menu*/
+.toc{padding:0px; margin:0px;}
+.nav-toggle{color:#000; text-decoration:none; }
+.nav-toggle:hover{text-decoration:none}

@@ -24,7 +24,7 @@ $(document).ready(function() {
     var ul=false;
     var listnumber;
     arrayBilder=[];
-    
+
     
     /*lade Title Seite. title.Md*/
     $.ajax({
@@ -32,7 +32,8 @@ $(document).ready(function() {
         dataType: "text",
         success : function (data) {
             var preview_content = showdown.makeHtml(data);
-            $(".toc").append("<p><a class='link' data-link=chapter0>"+cover+"</a></p>");
+            title = $(preview_content).first().filter('h1').text();
+            $(".toc").append("<p><a class='link' data-link=chapter0>"+title+"</a></p>");
             $(".zweiDrittel").append("<div class='content chapter0'>"+preview_content+"</div>");
             theContent.push(preview_content);
             $(".chapter0").fadeIn();
@@ -46,7 +47,8 @@ $(document).ready(function() {
                     dataType: "text",
                     success : function (data) {
                         var preview_content = showdown.makeHtml(data);
-                        $(".toc").append("<p><a class='link' data-link=chapter0>"+cover+"</a></p>");
+                        title = $(preview_content).first().filter('h1').text();
+                        $(".toc").append("<p><a class='link' data-link=chapter0>"+title+"</a></p>");
                         $(".zweiDrittel").append("<div class='content chapter0'>"+preview_content+"</div>");
                         theContent.push(preview_content);
                         $(".chapter0").fadeIn();
@@ -80,6 +82,21 @@ $(document).ready(function() {
                 });
             }
         })
+        var nav = responsiveNav(".toc", { // Selector
+            animate: true, // Boolean: Use CSS3 transitions, true or false
+            transition: 284, // Integer: Speed of the transition, in milliseconds
+            label: "<h5>"+tableOfContent+"</h5>", // String: Label for the navigation toggle
+            insert: "before", // String: Insert the toggle before or after the navigation
+            customToggle: "", // Selector: Specify the ID of a custom toggle
+            closeOnNavClick: false, // Boolean: Close the navigation when one of the links are clicked
+            openPos: "relative", // String: Position of the opened nav, relative or static
+            navClass: "nav-collapse", // String: Default CSS class. If changed, you need to edit the CSS too!
+            navActiveClass: "js-nav-active", // String: Class that is added to  element when nav is active
+            jsClass: "js", // String: 'JS enabled' class which is added to  element
+            init: function(){}, // Function: Init callback
+            open: function(){}, // Function: Open callback
+            close: function(){} // Function: Close callback
+    });
     });
     
     /*Click durch die einzelnen Kapitel*/
