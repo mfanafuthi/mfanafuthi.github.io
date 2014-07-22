@@ -32,7 +32,7 @@ $(document).ready(function() {
         dataType: "text",
         success : function (data) {
             var preview_content = showdown.makeHtml(data);
-            $(".toc").append("<p><a class='link' data-link=chapter0'>"+cover+"</a></p>");
+            $(".toc").append("<p><a class='link' data-link=chapter0>"+cover+"</a></p>");
             $(".zweiDrittel").append("<div class='content chapter0'>"+preview_content+"</div>");
             theContent.push(preview_content);
             $(".chapter0").fadeIn();
@@ -46,6 +46,7 @@ $(document).ready(function() {
                     dataType: "text",
                     success : function (data) {
                         var preview_content = showdown.makeHtml(data);
+                        $(".toc").append("<p><a class='link' data-link=chapter0>"+cover+"</a></p>");
                         $(".zweiDrittel").append("<div class='content chapter0'>"+preview_content+"</div>");
                         theContent.push(preview_content);
                         $(".chapter0").fadeIn();
@@ -90,9 +91,9 @@ $(document).ready(function() {
     
     /*Pdf erstellen*/
     $(document).on("click", "#download", function(){
+        
         /*Schritt 1 ALle Bilder zu URLs*/
         zaehlerBilder=0;
-        
         
         $("img").each(function() {
             var canvas = document.createElement('canvas');
@@ -187,9 +188,6 @@ $(document).ready(function() {
                     }
                 }
             }else{
-                //console.log(theContent);
-                //console.log(q);
-                //console.log(theContent[q]);
                 string=theContent[q].replace("/n","");
                 console.log(string);
                 doc.fromHTML(string,startX,startY,{
@@ -203,6 +201,7 @@ $(document).ready(function() {
         doc.output('datauri');
     }
     
+    //Form der einzelnen Parts
     var specialElementHandlers = {
         'H1': function(element, renderer){
             doc.setFont("helvetica");
