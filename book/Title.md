@@ -2,4 +2,4 @@
 
 Herausgeber: blabliublu
 
-![Titelbild](images/title.jpg)
+![Titelbild](../images/title.jpg)
