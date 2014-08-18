@@ -24,7 +24,17 @@ $(document).ready(function() {
     var ul=false;
     var listnumber;
     arrayBilder=[];
-
+    
+    /*img src anpassen*/
+    $("img").each(function() {  
+        imgsrc = this.src;
+        if(imgsrc.search("../")==0){
+            imgsrc.replace("../","");
+            this.src=imgsrc;
+            
+        }
+        //console.log(imgsrc);
+    });  
     
     /*lade Title Seite. title.Md*/
     $.ajax({
