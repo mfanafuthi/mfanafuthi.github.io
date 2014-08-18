@@ -26,15 +26,7 @@ $(document).ready(function() {
     arrayBilder=[];
     
     /*img src anpassen*/
-    $("img").each(function() {  
-        imgsrc = this.src;
-        if(imgsrc.search("../")==0){
-            imgsrc.replace("../","");
-            this.src=imgsrc;
-            
-        }
-        //console.log(imgsrc);
-    });  
+
     
     /*lade Title Seite. title.Md*/
     $.ajax({
@@ -92,6 +84,7 @@ $(document).ready(function() {
                 });
             }
         })
+        imageRepair();
         var nav = responsiveNav(".toc", { // Selector
             animate: true, // Boolean: Use CSS3 transitions, true or false
             transition: 284, // Integer: Speed of the transition, in milliseconds
@@ -430,5 +423,17 @@ $(document).ready(function() {
             doc.text(startX, y, textArray)
             y=fullSize;
         }
+    }
+    
+    function imageRepair(){
+        $("img").each(function() {  
+        imgsrc = this.src;
+        if(imgsrc.search("../")==0){
+            imgsrc.replace("../","");
+            this.src=imgsrc;
+            
+        }
+        //console.log(imgsrc);
+    });
     }
 });
